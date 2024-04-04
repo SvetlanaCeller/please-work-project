@@ -21,6 +21,11 @@ public class GenreServiceImpl implements GenreService {
         return convertToDto(genre);
     }
 
+    @Override
+    public Long getIdByGenreName(String name) {
+        return genreRepository.findGenreByName(name).get().getId();
+    }
+
     private GenreDto convertToDto(Genre genre) {
         List<BookDtoWithoutGenre> bookDtoList = genre.getBooks()
                 .stream()
