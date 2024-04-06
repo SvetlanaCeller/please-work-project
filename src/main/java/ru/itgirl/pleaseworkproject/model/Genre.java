@@ -1,5 +1,6 @@
 package ru.itgirl.pleaseworkproject.model;
 
+import aj.org.objectweb.asm.ConstantDynamic;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,4 +24,5 @@ public class Genre {
 
     @OneToMany(mappedBy = "genre")
     private Set<Book> books;
+
 }

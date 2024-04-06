@@ -6,11 +6,9 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.stereotype.Service;
 import ru.itgirl.pleaseworkproject.dto.BookCreateDto;
 import ru.itgirl.pleaseworkproject.dto.BookDto;
-import ru.itgirl.pleaseworkproject.dto.GenreDto;
 import ru.itgirl.pleaseworkproject.model.Book;
 import ru.itgirl.pleaseworkproject.model.Genre;
 import ru.itgirl.pleaseworkproject.repository.BookRepository;
@@ -21,6 +19,7 @@ import ru.itgirl.pleaseworkproject.repository.GenreRepository;
 public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
+    private final GenreRepository genreRepository;
 
     @Override
     public BookDto getByNameV1(String name) {
@@ -32,6 +31,7 @@ public class BookServiceImpl implements BookService {
         return BookDto.builder()
                 .id(book.getId())
                 .name(book.getName())
+                .genre(book.getGenre().getName())
                 .build();
     }
 
@@ -63,10 +63,10 @@ public class BookServiceImpl implements BookService {
     }
 
     private Book convertDtoToEntity(BookCreateDto bookCreateDto){
-        GenreRepository genreRepository;
+        Genre genre = genreRepository.findGenreByName(bookCreateDto.getGenre()).orElseThrow();
         return Book.builder()
                 .name(bookCreateDto.getName())
-                .genre(Genre.builder().name(genreRepository.findById().build())
-                .build();
+                .genre(genre)
+                        .build();
     }
 }

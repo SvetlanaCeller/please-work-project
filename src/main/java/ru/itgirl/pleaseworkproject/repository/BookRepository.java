@@ -12,4 +12,6 @@ public interface BookRepository extends JpaRepository<Book, Long>, JpaSpecificat
     Optional<Book> findBookByNameBySql(String name);
 
     Optional<Book> findBookByName(String name);
+
+    Optional<Book> findGenreByName(String name);
 }
