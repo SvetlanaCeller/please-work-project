@@ -4,4 +4,6 @@ import ru.itgirl.pleaseworkproject.dto.GenreDto;
 
 public interface GenreService {
     GenreDto getGenreById(Long id);
+
+    Long getIdByGenreName (String name);
 }

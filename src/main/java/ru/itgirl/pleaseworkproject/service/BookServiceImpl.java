@@ -6,17 +6,22 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.stereotype.Service;
+import ru.itgirl.pleaseworkproject.dto.BookCreateDto;
 import ru.itgirl.pleaseworkproject.dto.BookDto;
+import ru.itgirl.pleaseworkproject.dto.GenreDto;
 import ru.itgirl.pleaseworkproject.model.Book;
+import ru.itgirl.pleaseworkproject.model.Genre;
 import ru.itgirl.pleaseworkproject.repository.BookRepository;
-import ru.itgirl.pleaseworkproject.service.BookService;
+import ru.itgirl.pleaseworkproject.repository.GenreRepository;
 
 @Service
 @RequiredArgsConstructor
 public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
+
     @Override
     public BookDto getByNameV1(String name) {
         Book book = bookRepository.findBookByName(name).orElseThrow();
@@ -26,7 +31,6 @@ public class BookServiceImpl implements BookService {
     private BookDto convertEntityToDto(Book book) {
         return BookDto.builder()
                 .id(book.getId())
-                .genre(book.getGenre().getName())
                 .name(book.getName())
                 .build();
     }
@@ -50,5 +54,19 @@ public class BookServiceImpl implements BookService {
 
         Book book = bookRepository.findOne(specification).orElseThrow();
         return convertEntityToDto(book);
+    }
+
+    @Override
+    public BookDto createBook(BookCreateDto bookCreateDto) {
+        Book book = bookRepository.save(convertDtoToEntity(bookCreateDto));
+        return convertEntityToDto(book);
+    }
+
+    private Book convertDtoToEntity(BookCreateDto bookCreateDto){
+        GenreRepository genreRepository;
+        return Book.builder()
+                .name(bookCreateDto.getName())
+                .genre(Genre.builder().name(genreRepository.findById().build())
+                .build();
     }
 }

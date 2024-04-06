@@ -1,10 +1,10 @@
 package ru.itgirl.pleaseworkproject.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import ru.itgirl.pleaseworkproject.dto.BookCreateDto;
 import ru.itgirl.pleaseworkproject.dto.BookDto;
+import ru.itgirl.pleaseworkproject.dto.BookDtoWithoutGenre;
 import ru.itgirl.pleaseworkproject.service.BookService;
 
 @RestController
@@ -26,5 +26,10 @@ public class BookController {
     @GetMapping("/book/v3")
     BookDto getBookByNameV3(@RequestParam("name") String name) {
         return bookService.getByNameV3(name);
+    }
+
+    @PostMapping("/book/create")
+    BookDto createBook(@RequestBody BookCreateDto bookCreateDto){
+        return bookService.createBook(bookCreateDto);
     }
 }
