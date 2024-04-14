@@ -1,6 +1,8 @@
 package ru.itgirl.pleaseworkproject.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.itgirl.pleaseworkproject.dto.AuthorCreateDto;
 import ru.itgirl.pleaseworkproject.dto.AuthorDto;
@@ -9,6 +11,7 @@ import ru.itgirl.pleaseworkproject.service.AuthorService;
 
 @RestController
 @RequiredArgsConstructor
+@Controller
 public class AuthorController {
 
     private final AuthorService authorService;
@@ -47,6 +50,12 @@ public class AuthorController {
     void updateAuthor(@PathVariable("id") Long id){
         authorService.deleteAuthor(id);
 
+    }
+
+    @GetMapping("/authors")
+    Model getAuthorsView(Model model) {
+        model.addAttribute("authors", authorService.getAllAuthors());
+        return model;
     }
 
 

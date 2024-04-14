@@ -10,5 +10,4 @@ public class PleaseWorkProjectApplication {
 
         SpringApplication.run(PleaseWorkProjectApplication.class, args);
     }
-
 }

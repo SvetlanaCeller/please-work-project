@@ -5,10 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.itgirl.pleaseworkproject.model.Author;
-import ru.itgirl.pleaseworkproject.model.Genre;
 
 import java.util.List;
-import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,7 +16,7 @@ public class BookCreateDto {
     private String name;
     private String genre;
 
-    private List<AuthorDto> authors;
+    private List<Author> authors;
 
 
 }

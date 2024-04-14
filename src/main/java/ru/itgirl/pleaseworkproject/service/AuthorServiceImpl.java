@@ -8,6 +8,7 @@ import ru.itgirl.pleaseworkproject.model.Author;
 import ru.itgirl.pleaseworkproject.repository.AuthorRepository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -72,6 +73,12 @@ public class AuthorServiceImpl implements AuthorService {
                 .build();
     }
 
+    @Override
+    public List<AuthorDtoWithoutBooks> getAllAuthors() {
+        List<Author> authors = authorRepository.findAll();
+        return authors.stream().map(this::convertEntityToDtoWithoutBooks).collect(Collectors.toList());
+    }
+
     private AuthorDto convertEntityToDto(Author author) {
         List<BookDto> bookDtoList = null;
         if (author.getBooks() != null) {
@@ -92,6 +99,14 @@ public class AuthorServiceImpl implements AuthorService {
                 .build();
     }
 
+    private AuthorDtoWithoutBooks convertEntityToDtoWithoutBooks(Author author) {
+        return AuthorDtoWithoutBooks.builder()
+                .id(author.getId())
+                .name(author.getName())
+                .surname(author.getSurname())
+                .build();
+    }
+
     @Override
     public AuthorDto updateAuthor(AuthorUpdateDto authorUpdateDto) {
         Author author = authorRepository.findById(authorUpdateDto.getId()).orElseThrow();
@@ -100,6 +115,7 @@ public class AuthorServiceImpl implements AuthorService {
         Author savedAuthor = authorRepository.save(author);
         return convertEntityToDto(savedAuthor);
     }
+
     @Override
     public void deleteAuthor(Long id) {
         authorRepository.deleteById(id);

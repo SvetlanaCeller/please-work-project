@@ -2,7 +2,10 @@ package ru.itgirl.pleaseworkproject.service;
 
 import ru.itgirl.pleaseworkproject.dto.AuthorCreateDto;
 import ru.itgirl.pleaseworkproject.dto.AuthorDto;
+import ru.itgirl.pleaseworkproject.dto.AuthorDtoWithoutBooks;
 import ru.itgirl.pleaseworkproject.dto.AuthorUpdateDto;
+
+import java.util.List;
 
 public interface AuthorService {
     AuthorDto getAuthorById(Long id);
@@ -18,4 +21,6 @@ public interface AuthorService {
     AuthorDto updateAuthor(AuthorUpdateDto authorUpdateDto);
 
     public void deleteAuthor(Long id);
+
+    public List<AuthorDtoWithoutBooks> getAllAuthors();
 }
