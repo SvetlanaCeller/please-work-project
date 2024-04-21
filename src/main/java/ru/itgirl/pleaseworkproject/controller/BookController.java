@@ -1,14 +1,13 @@
 package ru.itgirl.pleaseworkproject.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.itgirl.pleaseworkproject.dto.BookCreateDto;
 import ru.itgirl.pleaseworkproject.dto.BookDto;
 import ru.itgirl.pleaseworkproject.service.BookService;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -17,8 +16,13 @@ public class BookController {
 
     private final BookService bookService;
 
+    @GetMapping("/hello")
+    public String hello() {
+        return "Welcome, if you want to have full access, please, authorize";
+    }
+
     @GetMapping("/book")
-    BookDto getBookByName(@RequestParam("name") String name) {
+    BookDto getByNameV1(@RequestParam("name") String name) {
         return bookService.getByNameV1(name);
     }
 
@@ -33,21 +37,25 @@ public class BookController {
     }
 
     @PostMapping("/book/create")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     BookDto createBook(@RequestBody BookCreateDto bookCreateDto) {
         return bookService.createBook(bookCreateDto);
     }
 
     @PutMapping("/book/update")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     BookDto updateBook(@RequestBody BookDto bookDto) {
         return bookService.updateBook(bookDto);
     }
 
     @DeleteMapping("book/delete/{id}")
-    void updateBook(@PathVariable("id") Long id) {
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    void deleteBook(@PathVariable("id") Long id) {
         bookService.deleteBook(id);
     }
 
     @GetMapping("/books")
+    @PreAuthorize("hasAuthority('ROLE_USER')")
     Model getBooksView(Model model) {
         model.addAttribute("books", bookService.getAllBooks());
         return model;
