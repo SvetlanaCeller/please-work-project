@@ -5,17 +5,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Builder
-
-public class   AuthorDto {
+public class UserDto {
     private Long id;
     private String name;
-    private String surname;
+    private String password;
+    private String roles;
 
-    private List<BookDto> books;
 }
