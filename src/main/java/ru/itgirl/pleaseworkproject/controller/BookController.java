@@ -1,5 +1,7 @@
 package ru.itgirl.pleaseworkproject.controller;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -11,7 +13,7 @@ import ru.itgirl.pleaseworkproject.service.BookService;
 
 @RestController
 @RequiredArgsConstructor
-@Controller
+@SecurityRequirement(name = "library-users")
 public class BookController {
 
     private final BookService bookService;
@@ -44,7 +46,7 @@ public class BookController {
 
     @PutMapping("/book/update")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    BookDto updateBook(@RequestBody BookDto bookDto) {
+    BookDto updateBook(@RequestBody @Valid BookDto bookDto) {
         return bookService.updateBook(bookDto);
     }
 

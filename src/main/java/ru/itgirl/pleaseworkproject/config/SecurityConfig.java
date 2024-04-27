@@ -16,9 +16,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import ru.itgirl.pleaseworkproject.service.MyUserDetailsService;
 
-@Configuration
+
 @EnableWebSecurity
 @EnableMethodSecurity
+@Configuration
 public class SecurityConfig {
     @Bean
     public UserDetailsService userDetailsService() {
@@ -39,7 +40,9 @@ public class SecurityConfig {
                         .requestMatchers("/account/**").permitAll()
                         .requestMatchers("/book/**").authenticated()
                         .requestMatchers("/user/**").authenticated()
-                        .requestMatchers("/books").authenticated())
+                        .requestMatchers("/books").authenticated()
+                        .requestMatchers("/author/**").authenticated()
+                        .requestMatchers("/v3/**", "/swagger-ui/**").permitAll())
                 .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
                 .httpBasic(Customizer.withDefaults()).build();
     }

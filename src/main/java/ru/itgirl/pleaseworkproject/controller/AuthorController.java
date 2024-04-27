@@ -1,6 +1,9 @@
 package ru.itgirl.pleaseworkproject.controller;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +15,7 @@ import ru.itgirl.pleaseworkproject.service.AuthorService;
 @RestController
 @RequiredArgsConstructor
 @Controller
+@SecurityRequirement(name = "library-users")
 public class AuthorController {
 
     private final AuthorService authorService;
@@ -37,16 +41,18 @@ public class AuthorController {
     }
 
     @PostMapping("/author/create")
-    AuthorDto createAuthor(@RequestBody AuthorCreateDto authorCreateDto) {
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    AuthorDto createAuthor(@RequestBody @Valid AuthorCreateDto authorCreateDto) {
         return authorService.createAuthor(authorCreateDto);
     }
 
     @PutMapping("/author/update")
-    AuthorDto updateAuthor(@RequestBody AuthorUpdateDto authorUpdateDto) {
+    AuthorDto updateAuthor(@RequestBody @Valid AuthorUpdateDto authorUpdateDto) {
         return authorService.updateAuthor(authorUpdateDto);
     }
 
     @DeleteMapping("author/delete/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     void updateAuthor(@PathVariable("id") Long id){
         authorService.deleteAuthor(id);
 
