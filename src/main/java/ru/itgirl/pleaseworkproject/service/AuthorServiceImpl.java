@@ -53,12 +53,12 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public AuthorDto getByNameV2(String name) {
         log.info("Try to find author by name {}", name);
-        Optional <Author> author = authorRepository.findBookByNameBySql(name);
-        if (author.isPresent()){
+        Optional<Author> author = authorRepository.findBookByNameBySql(name);
+        if (author.isPresent()) {
             AuthorDto authorDto = convertEntityToDto(author.get());
             log.info("Author: {}", authorDto.toString());
             return authorDto;
-        }else {
+        } else {
             log.error("Author with name {} not found", name);
             throw new NoSuchElementException("There is no such element");
         }
@@ -71,11 +71,11 @@ public class AuthorServiceImpl implements AuthorService {
                 (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("name"), name));
 
         Optional<Author> author = authorRepository.findOne(specification);
-        if (author.isPresent()){
+        if (author.isPresent()) {
             AuthorDto authorDto = convertEntityToDto(author.get());
             log.info("Author: {}", authorDto.toString());
             return authorDto;
-        }else {
+        } else {
             log.error("Author with name {} not found", name);
             throw new NoSuchElementException("There is no such element");
         }
@@ -88,7 +88,7 @@ public class AuthorServiceImpl implements AuthorService {
             Author author = authorRepository.save(convertDtoToEntity(authorCreateDto));
             log.info("Author is saved");
             return Optional.ofNullable(convertEntityToDto(author)).get();
-        }else {
+        } else {
             log.error("Author's name is required.");
             throw new NullArgumentException("You didn't specify an author's name.");
         }
@@ -104,11 +104,11 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public List<AuthorDtoWithoutBooks> getAllAuthors() {
         log.info("Trying to find all the authors.");
-        List <Author> authors = authorRepository.findAll();
+        List<Author> authors = authorRepository.findAll();
         if (!authors.isEmpty()) {
             log.info("The authors are found.");
             return authors.stream().map(this::convertEntityToDtoWithoutBooks).collect(Collectors.toList());
-        }else {
+        } else {
             log.error("Authors not found");
             throw new NoSuchElementException("There are no such elements");
         }
@@ -148,21 +148,21 @@ public class AuthorServiceImpl implements AuthorService {
         Author author = authorRepository.findById(authorUpdateDto.getId()).orElseThrow();
         if (Optional.ofNullable(author.getId()).isPresent()) {
             log.info("The author is found");
-            if (authorUpdateDto.getName().length()<3 || authorUpdateDto.getName().length()>10){
+            if (authorUpdateDto.getName().length() < 3 || authorUpdateDto.getName().length() > 10) {
                 log.error("The length of the name is not correct.");
-            } else{
+            } else {
                 author.setName(authorUpdateDto.getName());
                 log.info("The name is changed to {}", author.getName());
             }
-            if (authorUpdateDto.getSurname().isEmpty()){
+            if (authorUpdateDto.getSurname().isEmpty()) {
                 log.error("The surname can't be empty");
-            } else{
+            } else {
                 author.setSurname(authorUpdateDto.getSurname());
                 log.info("The surname is changed to {}", author.getSurname());
             }
             Author savedAuthor = authorRepository.save(author);
             return convertEntityToDto(savedAuthor);
-        }else {
+        } else {
             log.error("Author with id {} not found", authorUpdateDto.getId());
             throw new NoSuchElementException("No value present");
         }
@@ -170,7 +170,8 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public void deleteAuthor(Long id) {
-        log.info("Trying to delete the author.");;
+        log.info("Trying to delete the author.");
+        ;
         authorRepository.deleteById(id);//как я понимаю, там и без меня уже прописали нужные логи
     }
 }
