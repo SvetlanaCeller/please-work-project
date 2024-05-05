@@ -1,4 +1,4 @@
-package ru.itgirl.pleaseworkproject.test;
+package ru.itgirl.pleaseworkproject.test.serviceTest;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
