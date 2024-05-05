@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface AuthorRepository extends JpaRepository<Author, Long>, JpaSpecificationExecutor<Author> {
     @Query(nativeQuery = true, value = "SELECT * FROM AUTHOR WHERE name = ?")
-    Optional<Author> findBookByNameBySql(String name);
+    Optional<Author> findAuthorByNameBySql(String name);
 
     Optional<Author> findAuthorByName(String name);
 }

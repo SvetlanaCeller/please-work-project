@@ -36,7 +36,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public AuthorDto getByNameV1(String name) {
+    public AuthorDto getAuthorByNameV1(String name) {
         log.info("Try to find author by name {}", name);
         Optional<Author> author = authorRepository.findAuthorByName(name);
         if (author.isPresent()) {
@@ -51,9 +51,9 @@ public class AuthorServiceImpl implements AuthorService {
 
 
     @Override
-    public AuthorDto getByNameV2(String name) {
+    public AuthorDto getAuthorByNameV2(String name) {
         log.info("Try to find author by name {}", name);
-        Optional<Author> author = authorRepository.findBookByNameBySql(name);
+        Optional<Author> author = authorRepository.findAuthorByNameBySql(name);
         if (author.isPresent()) {
             AuthorDto authorDto = convertEntityToDto(author.get());
             log.info("Author: {}", authorDto.toString());
@@ -65,7 +65,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public AuthorDto getByNameV3(String name) {
+    public AuthorDto getAuthorByNameV3(String name) {
         log.info("Try to find author by name {}", name);
         Specification<Author> specification = Specification.where((Specification<Author>)
                 (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("name"), name));

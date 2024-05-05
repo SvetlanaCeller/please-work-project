@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.jpa.domain.Specification;
 import ru.itgirl.pleaseworkproject.dto.AuthorDto;
 import ru.itgirl.pleaseworkproject.model.Author;
 import ru.itgirl.pleaseworkproject.model.Book;
@@ -45,13 +46,96 @@ public class AuthorServiceTest {
         Assertions.assertEquals(authorDto.getName(), author.getName());
         Assertions.assertEquals(authorDto.getSurname(), author.getSurname());
     }
+
     @Test
     public void testGetAuthorByIdNotFound() {
-        Long id = 10L;
+        Long id = 1L;
         when(authorRepository.findById(id)).thenReturn(Optional.empty());
 
         Assertions.assertThrows(NoSuchElementException.class, () -> authorService.getAuthorById(id));
 
         verify(authorRepository).findById(id);
     }
+
+    @Test
+    public void testGetAuthorByNameV1() {
+        String name = "Александр";
+        String surname = "Пушкин";
+        Long id = 1L;
+        Set<Book> books = new HashSet<>();
+        Author author = new Author(id, name, surname, books);
+
+        when(authorRepository.findAuthorByName(name)).thenReturn(Optional.of(author));
+
+        AuthorDto authorDto = authorService.getAuthorByNameV1(name);
+
+        Assertions.assertEquals(authorDto.getId(), author.getId());
+        Assertions.assertEquals(authorDto.getName(), author.getName());
+        Assertions.assertEquals(authorDto.getSurname(), author.getSurname());
+
+    }
+
+    @Test
+    public void testGetAuthorByNameV1NotFound() {
+        String name = "Иннокентий";
+
+        when(authorRepository.findAuthorByName(name)).thenReturn(Optional.empty());
+
+        Assertions.assertThrows(NoSuchElementException.class, () -> authorService.getAuthorByNameV1(name));
+
+        verify(authorRepository).findAuthorByName(name);
+    }
+
+    @Test
+    public void getAuthorByNameV2() {
+        String name = "Николай";
+        String surname = "Гоголь";
+        Long id = 2L;
+        Set<Book> books = new HashSet<>();
+        Author author = new Author(id, name, surname, books);
+
+        when(authorRepository.findAuthorByNameBySql(name)).thenReturn(Optional.of(author));
+
+        AuthorDto authorDto = authorService.getAuthorByNameV2(name);
+
+        Assertions.assertEquals(authorDto.getId(), author.getId());
+        Assertions.assertEquals(authorDto.getName(), author.getName());
+        Assertions.assertEquals(authorDto.getSurname(), author.getSurname());
+
+    }
+
+    @Test
+    public void testGetAuthorByNameV2NotFound() {
+        String name = "Александр";
+
+        when(authorRepository.findAuthorByNameBySql(name)).thenReturn(Optional.empty());
+
+        Assertions.assertThrows(NoSuchElementException.class, () -> authorService.getAuthorByNameV2(name));
+
+        verify(authorRepository).findAuthorByNameBySql(name);
+    }
+
+    @Test
+    public void testGetAuthorByNameV3() {
+        String name = "Александр";
+        String surname = "Пушкин";
+        Long id = 1L;
+        Set<Book> books = new HashSet<>();
+        Author author = new Author(id, name, surname, books);
+
+        Specification<Author> specification = Specification.where((Specification<Author>)
+                (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("name"), name));
+
+
+        when(authorRepository.findOne(specification)).thenReturn(Optional.of(author));
+
+        AuthorDto authorDto = authorService.getAuthorByNameV3(name);
+
+        Assertions.assertEquals(authorDto.getId(), author.getId());
+        Assertions.assertEquals(authorDto.getName(), author.getName());
+        Assertions.assertEquals(authorDto.getSurname(), author.getSurname());
+    }
+
+
+
 }

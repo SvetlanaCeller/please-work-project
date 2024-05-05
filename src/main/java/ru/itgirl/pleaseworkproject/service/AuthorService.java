@@ -10,11 +10,11 @@ import java.util.List;
 public interface AuthorService {
     AuthorDto getAuthorById(Long id);
 
-    AuthorDto getByNameV1(String name);
+    AuthorDto getAuthorByNameV1(String name);
 
-    AuthorDto getByNameV2(String name);
+    AuthorDto getAuthorByNameV2(String name);
 
-    AuthorDto getByNameV3(String name);
+    AuthorDto getAuthorByNameV3(String name);
 
     AuthorDto createAuthor(AuthorCreateDto authorCreateDto);
 

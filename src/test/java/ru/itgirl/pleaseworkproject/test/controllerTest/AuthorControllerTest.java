@@ -29,6 +29,21 @@ public class AuthorControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.get("/author/{id}", authorId))
                 .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(authorDto.getName()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.surname").value(authorDto.getSurname()));
+    }
+
+
+
+    @Test
+    public void testGetAuthorByNameV1() throws Exception {
+        String name = "Александр";
+        AuthorDto authorDto = new AuthorDto();
+        authorDto.setId(1L);
+        authorDto.setName(name);
+        authorDto.setSurname("Пушкин");
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/author", name))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(authorDto.getId()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(authorDto.getName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.surname").value(authorDto.getSurname()));
