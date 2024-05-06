@@ -1,11 +1,16 @@
 package ru.itgirl.pleaseworkproject.test.serviceTest;
 
+import freemarker.template.utility.NullArgumentException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.jpa.domain.Specification;
+import ru.itgirl.pleaseworkproject.dto.AuthorCreateDto;
 import ru.itgirl.pleaseworkproject.dto.AuthorDto;
 import ru.itgirl.pleaseworkproject.model.Author;
 import ru.itgirl.pleaseworkproject.model.Book;
@@ -20,8 +25,8 @@ import java.util.Set;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
-public class AuthorServiceTest {
+@ExtendWith(MockitoExtension.class)
+class AuthorServiceTest {
 
     @Mock
     private AuthorRepository authorRepository;
@@ -37,7 +42,7 @@ public class AuthorServiceTest {
         Set<Book> books = new HashSet<>();
         Author author = new Author(id, name, surname, books);
 
-        when(authorRepository.findById(id)).thenReturn(Optional.of(author));
+        Mockito.when(authorRepository.findById(id)).thenReturn(Optional.of(author));
 
         AuthorDto authorDto = authorService.getAuthorById(id);
 
@@ -69,6 +74,7 @@ public class AuthorServiceTest {
 
         AuthorDto authorDto = authorService.getAuthorByNameV1(name);
 
+        verify(authorRepository).findAuthorByName(name);
         Assertions.assertEquals(authorDto.getId(), author.getId());
         Assertions.assertEquals(authorDto.getName(), author.getName());
         Assertions.assertEquals(authorDto.getSurname(), author.getSurname());
@@ -97,6 +103,8 @@ public class AuthorServiceTest {
         when(authorRepository.findAuthorByNameBySql(name)).thenReturn(Optional.of(author));
 
         AuthorDto authorDto = authorService.getAuthorByNameV2(name);
+
+        verify(authorRepository).findAuthorByNameBySql(name);
 
         Assertions.assertEquals(authorDto.getId(), author.getId());
         Assertions.assertEquals(authorDto.getName(), author.getName());
@@ -131,11 +139,22 @@ public class AuthorServiceTest {
 
         AuthorDto authorDto = authorService.getAuthorByNameV3(name);
 
+        verify(authorRepository).findOne(specification);
         Assertions.assertEquals(authorDto.getId(), author.getId());
         Assertions.assertEquals(authorDto.getName(), author.getName());
         Assertions.assertEquals(authorDto.getSurname(), author.getSurname());
     }
 
+    @Test
+    public void testCreateAuthor_SavedAuthor(){
+        AuthorCreateDto authorCreateDto = new AuthorCreateDto("Антон", "Чехов");
+        authorService.createAuthor(authorCreateDto);
+        //но в логах "Author is saved"
+    }
 
-
+    @Test
+    public void testCreateAuthor_NullArgumentException(){
+        AuthorCreateDto authorCreateDto = new AuthorCreateDto(" ", "Чехов");
+        Assertions.assertThrows(NullArgumentException.class, () -> authorService.createAuthor(authorCreateDto));
+    }
 }

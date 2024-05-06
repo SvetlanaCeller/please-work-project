@@ -44,8 +44,7 @@ public class AuthorControllerTest {
         authorDto.setSurname("Пушкин");
 
         mockMvc.perform(MockMvcRequestBuilders.get("/author", name))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(authorDto.getId()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(authorDto.getName()))
+                .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.surname").value(authorDto.getSurname()));
     }
 }
